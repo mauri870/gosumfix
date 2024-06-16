@@ -1,0 +1,42 @@
+! gosumfix
+stdout 'replace or exclude directives found. Please fix the conflicts manually.'
+
+cp go.mod.2 go.mod
+
+! gosumfix
+stdout 'replace or exclude directives found. Please fix the conflicts manually.'
+
+-- go.mod --
+module a
+
+go 1.21
+
+<<<<<<< HEAD
+require rsc.io/quote v1.5.2
+=======
+require rsc.io/quote v1.5.1
+replace rsc.io/quote v1.5.1 => ./mod
+>>>>>>> master
+
+require (
+        golang.org/x/text v0.16.0 // indirect
+        rsc.io/sampler v1.99.99 // indirect
+)
+
+-- go.mod.2 --
+module a
+
+go 1.21
+
+<<<<<<< HEAD
+require rsc.io/quote v1.5.2
+=======
+require rsc.io/quote v1.5.1
+exclude rsc.io/sampler v1.99.99
+>>>>>>> master
+
+require (
+        golang.org/x/text v0.16.0 // indirect
+        rsc.io/sampler v1.99.99 // indirect
+)
+
