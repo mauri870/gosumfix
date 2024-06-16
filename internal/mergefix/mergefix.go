@@ -13,7 +13,8 @@ var (
 	TheirsMergeRE = regexp.MustCompile(`\={7,}`)
 	EndMergeRE    = regexp.MustCompile(`\>{7,}`)
 
-	ErrorUnsupportedDirective = errors.New("gosumfix: unsupported directive. Please fix the conflicts manually.")
+	ErrorUnsupportedDirective = errors.New("unsupported directive. Please fix the conflicts manually.")
+	ErrorNoConflicts          = errors.New("no conflicts to be fixed")
 )
 
 func hasConflictMarkers(b []byte) bool {
@@ -27,7 +28,7 @@ func FixConflicts(r io.Reader) ([]byte, error) {
 	}
 
 	if !hasConflictMarkers(buf) {
-		return nil, nil
+		return nil, ErrorNoConflicts
 	}
 
 	lines := bytes.Split(buf, []byte("\n"))

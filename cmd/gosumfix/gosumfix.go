@@ -48,6 +48,10 @@ func fixConflicts(filename string) error {
 			return fmt.Errorf("replace or exclude directives found. Please fix the conflicts manually.\n")
 		}
 
+		if errors.Is(err, mergefix.ErrorNoConflicts) {
+			return nil
+		}
+
 		return fmt.Errorf("failed to fix conflicts in %s: %v\n", path.Base(filename), err)
 	}
 
