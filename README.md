@@ -31,4 +31,5 @@ If you install the git merge driver you can run `git merge` as usual and the dri
 
 ```bash
 gosumdriver install
+gosumdriver uninstall # To uninstall the driver
 ```

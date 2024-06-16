@@ -36,6 +36,8 @@ If the previous command returns an empty string, you can create a global
 
 	echo "go.mod merge=gosumdriver\ngo.sum merge=gosumdriver" > ~/.gitattributes
 	git config core.attributesfile ~/.gitattributes
+
+Run 'gosumdriver uninstall' to remove the driver.
 `
 	gitRemoveDriverCmd = []string{
 		"git", "config", "--global", "--remove-section", "merge.gosumdriver",
