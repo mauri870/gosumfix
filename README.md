@@ -9,7 +9,7 @@ There is a tracking proposal for this feature at https://www.github.com/golang/g
 ## Installation
 
 ```bash
-go install github.com/mauri870/gosumfix/cmd/...
+go install github.com/mauri870/gosumfix/cmd/...@latest
 ```
 
 This will install the binaries in your `$GOPATH/bin` directory.
