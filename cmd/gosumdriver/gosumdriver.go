@@ -119,7 +119,7 @@ func uninstall() error {
 func merge(current, base, other, fname string) error {
 	dir, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("failed to get working directory: %v\n", err)
+		return fmt.Errorf("failed to get working directory: %v", err)
 	}
 
 	// create a merge file with the conflicts
@@ -131,7 +131,7 @@ func merge(current, base, other, fname string) error {
 	// fix conflicts
 	buf, err := mergefix.FixConflicts(bytes.NewReader(out))
 	if err != nil {
-		return fmt.Errorf("failed to fix conflicts: %v\n", err)
+		return fmt.Errorf("failed to fix conflicts: %v", err)
 	}
 
 	// save the file overwriting the original file
@@ -142,7 +142,7 @@ func merge(current, base, other, fname string) error {
 
 	// reconcile dependencies
 	if err := gomod.Tidy(dir); err != nil {
-		fmt.Errorf("failed to run go mod tidy: %v\n", err)
+		fmt.Errorf("failed to run go mod tidy: %v", err)
 	}
 
 	// save the merged file as the current file
