@@ -1,7 +1,0 @@
-! gosumfix
-stdout 'file not found: go.sum'
-
--- go.mod --
-
-module a
-go 1.21

@@ -1,0 +1,14 @@
+! gosumfix
+stdout 'file not found: go.mod'
+cp go.mod.tmp go.mod
+! gosumfix
+stdout 'file not found: go.sum'
+cp go.sum.tmp go.sum
+gosumfix
+
+-- go.mod.tmp --
+
+module a
+go 1.21
+
+-- go.sum.tmp --

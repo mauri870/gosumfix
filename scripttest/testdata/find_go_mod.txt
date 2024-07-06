@@ -1,2 +1,0 @@
-! gosumfix
-stdout 'file not found: go.mod'
