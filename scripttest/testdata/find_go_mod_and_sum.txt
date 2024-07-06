@@ -9,6 +9,6 @@ gosumfix
 -- go.mod.tmp --
 
 module a
-go 1.21
+go 1.21.0
 
 -- go.sum.tmp --
