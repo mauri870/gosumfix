@@ -53,6 +53,7 @@ Please manually remove the following lines from your .gitattributes file:
 
 func main() {
 	if len(os.Args) < 2 {
+		fmt.Println("usage: gosumdriver [install|uninstall]")
 		os.Exit(1)
 	}
 
