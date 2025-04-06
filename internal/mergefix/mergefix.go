@@ -3,7 +3,6 @@ package mergefix
 import (
 	"bytes"
 	"errors"
-	"io"
 	"regexp"
 )
 
@@ -21,25 +20,20 @@ func hasConflictMarkers(b []byte) bool {
 	return OursMergeRE.Match(b) && TheirsMergeRE.Match(b) && EndMergeRE.Match(b)
 }
 
-func FixConflicts(r io.Reader) ([]byte, error) {
-	buf, err := io.ReadAll(r)
-	if err != nil {
-		return nil, err
-	}
-
-	if !hasConflictMarkers(buf) {
+// RemoveConflictMarkers reads lines from the given input slice and removes any lines that include git conflict markers.
+func RemoveConflictMarkers(data []byte) ([]byte, error) {
+	if !hasConflictMarkers(data) {
 		return nil, ErrorNoConflicts
 	}
 
-	lines := bytes.Split(buf, []byte("\n"))
-	var out []byte
-
+	// small state machine to track current line state
 	// 0: normal line
 	// 1: inside parent conflict marker
 	// 2: inside ours conflict marker
 	// 3: inside theirs conflict marker
 	var state int = 0
-	for _, line := range lines {
+	var out []byte
+	for line := range bytes.Lines(data) {
 		switch {
 		case ParentMergeRE.Match(line):
 			state = 1
@@ -52,7 +46,6 @@ func FixConflicts(r io.Reader) ([]byte, error) {
 		default:
 			// report conflicts that should be fixed manually
 			if state != 0 && isUnsupportedDirective(line) {
-				// dir := bytes.Split(line, []byte(" "))[0]
 				return nil, ErrorUnsupportedDirective
 			}
 			out = append(out, line...)

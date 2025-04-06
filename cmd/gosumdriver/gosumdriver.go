@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -129,7 +128,7 @@ func merge(current, base, other, fname string) error {
 	out, _ := cmd.Output()
 
 	// fix conflicts
-	buf, err := mergefix.FixConflicts(bytes.NewReader(out))
+	buf, err := mergefix.RemoveConflictMarkers(out)
 	if err != nil {
 		return fmt.Errorf("failed to fix conflicts: %v", err)
 	}
@@ -142,7 +141,7 @@ func merge(current, base, other, fname string) error {
 
 	// reconcile dependencies
 	if err := gomod.Tidy(dir); err != nil {
-		fmt.Errorf("failed to run go mod tidy: %v", err)
+		return fmt.Errorf("failed to run go mod tidy: %v", err)
 	}
 
 	// save the merged file as the current file

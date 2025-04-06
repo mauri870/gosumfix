@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path"
 
@@ -42,29 +42,29 @@ func fixConflicts(filename string) error {
 	}
 	defer f.Close()
 
-	buf, err := mergefix.FixConflicts(f)
+	b, err := io.ReadAll(f)
 	if err != nil {
-		if errors.Is(err, mergefix.ErrorUnsupportedDirective) {
-			return fmt.Errorf("replace or exclude directives found. Please fix the conflicts manually.\n")
-		}
+		return fmt.Errorf("failed to read %s: %v\n", path.Base(filename), err)
+	}
 
-		if errors.Is(err, mergefix.ErrorNoConflicts) {
+	out, err := mergefix.RemoveConflictMarkers(b)
+	if err != nil {
+		switch {
+		case errors.Is(err, mergefix.ErrorNoConflicts):
 			return nil
+		case errors.Is(err, mergefix.ErrorUnsupportedDirective):
+			return fmt.Errorf("replace or exclude directives found. Please fix the conflicts manually.\n")
+		default:
+			return fmt.Errorf("failed to fix conflicts in %s: %v\n", path.Base(filename), err)
 		}
-
-		return fmt.Errorf("failed to fix conflicts in %s: %v\n", path.Base(filename), err)
 	}
 
 	f.Close()
-	err = os.WriteFile(filename, buf, 0644)
+	err = os.WriteFile(filename, out, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to write %s: %v\n", path.Base(filename), err)
 	}
 
 	fmt.Printf("gosumfix: %s merged\n", path.Base(filename))
 	return nil
-}
-
-func isUnsupportedDirective(line []byte) bool {
-	return bytes.HasPrefix(line, []byte("replace")) || bytes.HasPrefix(line, []byte("exclude"))
 }
