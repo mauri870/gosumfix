@@ -1,6 +1,6 @@
 module github.com/mauri870/gosumfix
 
-go 1.21.0
+go 1.24.0
 
 require rsc.io/script v0.0.2
 
